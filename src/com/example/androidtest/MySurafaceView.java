@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -25,6 +24,8 @@ public class MySurafaceView extends SurfaceView {
 		super(context, attrs, defStyle);
 	}
 	
+
+	
 	void setDrawable(Drawable drawable) {
 		this.mDrawable = drawable;
 		this.refreshDrawableState();
@@ -35,18 +36,22 @@ public class MySurafaceView extends SurfaceView {
 	public void draw(Canvas canvas) {
 		printf("***** Drawing my surface");
 		canvas.save();
-		//canvas.clipRect(0, 0, 100, 100);
-//		this.mDrawable.setBounds(0, 0, 100, 100);
 		Paint paint = new Paint(); 
-		paint.setColor(Color.WHITE);
-		paint.setStyle(Style.FILL);
-		canvas.drawPaint(paint);
+
+//		paint.setColor(Color.WHITE);
+//		paint.setStyle(Style.FILL);
+//		canvas.drawPaint(paint);
 		
+		printf("canvas: %s x %s", getWidth(), getHeight());
+		this.mDrawable.setBounds(0, 0, 100, 100);
 		this.mDrawable.draw(canvas);
-		paint.setColor(Color.BLACK);
-		paint.setTextSize(20);
-		canvas.drawText("Emo", 10, 10, paint);
-		canvas.drawRGB(255, 0, 0);
+
+		paint.setColor(Color.WHITE);
+		paint.setTextSize(30);
+		canvas.drawText("Emo", 20, 60, paint);
+
+		canvas.clipRect(0, 0, 100, 100);
+
 		canvas.restore();
 	}
 
