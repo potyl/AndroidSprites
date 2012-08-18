@@ -49,6 +49,8 @@ public class MyDrawable extends Drawable {
 		paint = new Paint(); 
 		paint.setColor(Color.WHITE);
 		paint.setTextSize(30);
+		paint.setAlpha(200);
+		paint.setAntiAlias(true);
 		canvas.drawText("Emo", 20, 60, paint);
 
 		canvas.restore();
