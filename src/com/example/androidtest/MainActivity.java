@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
 
 		private final Handler handler;
 		private final ImageView img;
-		private final Drawable [] bitmapDrawables;
+		private final Drawable [] drawables;
 
 		int idx = 0;
 		int speed = 5; // speed in pixels
@@ -39,20 +39,20 @@ public class MainActivity extends Activity {
 			return task;
 		}
 		
-		public RefrestTask(Handler handler, ImageView img, Drawable [] bitmapDrawables) {
+		public RefrestTask(Handler handler, ImageView img, Drawable [] drawables) {
 			this.img = img;
 			this.handler = handler;
-			this.bitmapDrawables = bitmapDrawables;
+			this.drawables = drawables;
 		}
 		
 		public void run() {
-			Drawable d = bitmapDrawables[idx];
+			Drawable d = drawables[idx];
 			img.setImageDrawable(d);
 			
 			if (goRight) {
 				idx += speed;
-				if (idx >= bitmapDrawables.length) {
-					idx = bitmapDrawables.length - 1;
+				if (idx >= drawables.length) {
+					idx = drawables.length - 1;
 					goRight = false;
 				}
 			}
@@ -83,9 +83,9 @@ public class MainActivity extends Activity {
 
 				ImageView img = (ImageView) findViewById(R.id.imageView1);
 
-		        // Create the a lot of bitmaps; 1 per vertical pixel in the image (1300 bitmaps)
-				// This is done to test that we don't require too much memory for this implementation
-				// The main bitmap is shared among all drawables so all we need is a few pointers per drawable
+		        // Create all the drawables clipped to the right place; 1 drawable per vertical pixel in the image (1151 in total)
+				// This is done to test that we don't require too much memory for this implementation.
+				// The main bitmap is shared among all drawables so all we need is a few pointers per drawable.
 				Resources res = getResources();
 				Drawable drawable = res.getDrawable(R.drawable.sprite);
 				Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
@@ -100,11 +100,11 @@ public class MainActivity extends Activity {
 				printf("img: %s x %s", w, h);
 
 				long memA = getMemoryUsed();
-				Drawable [] bitmapDrawables = new Drawable [ (height - h) ];
-				printf("Creating: %s bitmaps", bitmapDrawables.length);
+				Drawable [] drawables = new Drawable [ (height - h) ];
+				printf("Creating: %s bitmaps", drawables.length);
 				int y = 0;
-				for (int i = 0; i < bitmapDrawables.length; ++i) {
-					bitmapDrawables[i] = new MyDrawable(bitmap, 50, y, w, h);
+				for (int i = 0; i < drawables.length; ++i) {
+					drawables[i] = new MyDrawable(bitmap, 50, y, w, h);
 					++y;
 				}
 				long memB = getMemoryUsed();
@@ -112,7 +112,7 @@ public class MainActivity extends Activity {
 
 
 				// Start the animation
-				refreshTask = RefrestTask.start(handler, img, bitmapDrawables);
+				refreshTask = RefrestTask.start(handler, img, drawables);
 			}
 		});
     }
