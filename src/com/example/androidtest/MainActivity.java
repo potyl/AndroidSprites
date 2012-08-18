@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
 		private final BitmapDrawable [] bitmapDrawables;
 
 		int idx = 0;
-		int speed = 10; // speed in pixels
+		int speed = 5; // speed in pixels
 		boolean goRight = true; // Direction
 
 		
@@ -74,45 +74,42 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final ImageView img = (ImageView) findViewById(R.id.imageView1);
-
-        // Create the bitmaps
-		Resources res = getResources();
-		Drawable drawable = res.getDrawable(R.drawable.budapest);
-		Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-
-		int w = 100;//img.getWidth();
-		int h = 100;//img.getHeight();
-
-		int width = bitmap.getWidth();
-		int height = bitmap.getHeight();
-		
-		printf("bitmap: %s x %s", width, height);
-		printf("img: %s x %s", w, h);
-
-		long memA = getMemoryUsed();
-		final BitmapDrawable [] bitmapDrawables = new BitmapDrawable [width - w];
-		printf("Creating: %s bitmaps", bitmapDrawables.length);
-		int x = 0;
-		int y = 0;
-		for (int i = 0; i < bitmapDrawables.length; ++i) {
-			if (x + w > width) {
-				// A new row
-				x = 0;
-				++y;
-			}
-			Bitmap bClipped = Bitmap.createBitmap(bitmap, x, y, w, h);
-			BitmapDrawable bDrawable = new BitmapDrawable(res, bClipped);
-			bitmapDrawables[i] = bDrawable;
-			++x;
-		}
-		long memB = getMemoryUsed();
-		printf("Memory increase: %s", memB - memA);
-
 
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+
+		        ImageView img = (ImageView) findViewById(R.id.imageView1);
+
+		        // Create the bitmaps
+				Resources res = getResources();
+				Drawable drawable = res.getDrawable(R.drawable.sprite);
+				Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+
+				int w = img.getWidth();
+				int h = img.getHeight();
+
+				int width = bitmap.getWidth();
+				int height = bitmap.getHeight();
+
+				printf("bitmap: %s x %s", width, height);
+				printf("img: %s x %s", w, h);
+
+				long memA = getMemoryUsed();
+				final BitmapDrawable [] bitmapDrawables = new BitmapDrawable [300];//[ (height - h) ];
+				printf("Creating: %s bitmaps", bitmapDrawables.length);
+				int y = 0;
+				for (int i = 0; i < bitmapDrawables.length; ++i) {
+					Bitmap bClipped = Bitmap.createBitmap(bitmap, 50, y, w, h);
+					BitmapDrawable bDrawable = new BitmapDrawable(res, bClipped);
+					bitmapDrawables[i] = bDrawable;
+					++y;
+				}
+				long memB = getMemoryUsed();
+				printf("Memory increase: %s", memB - memA);
+
+
+				// Start the animation
 				if (refreshTask != null) handler.removeCallbacks(refreshTask);
 				refreshTask = RefrestTask.start(handler, img, bitmapDrawables);
 			}
