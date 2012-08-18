@@ -1,16 +1,17 @@
 package com.example.androidtest;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceView;
 
 public class MySurafaceView extends SurfaceView {
-	Drawable mDrawable;
+	Bitmap mBitmap;
 	  
 	public MySurafaceView(Context context) {
 		super(context);
@@ -23,34 +24,33 @@ public class MySurafaceView extends SurfaceView {
 	public MySurafaceView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
-	
 
-	
-	void setDrawable(Drawable drawable) {
-		this.mDrawable = drawable;
-		this.refreshDrawableState();
-		this.invalidate();
+	void setBitmap(Bitmap bitmap) {
+		this.mBitmap = bitmap;
 	}
-	
+
 	@Override
 	public void draw(Canvas canvas) {
-		printf("***** Drawing my surface");
 		canvas.save();
-		Paint paint = new Paint(); 
 
-//		paint.setColor(Color.WHITE);
-//		paint.setStyle(Style.FILL);
-//		canvas.drawPaint(paint);
-		
-		printf("canvas: %s x %s", getWidth(), getHeight());
-		this.mDrawable.setBounds(0, 0, 100, 100);
-		this.mDrawable.draw(canvas);
+		int w = getWidth();
+		int h = getHeight();
 
+		Paint paint;
+
+		// Draw the image
+		paint = new Paint();
+		paint.setAntiAlias(false);
+		paint.setFilterBitmap(false);
+		Rect srcR = new Rect(mX, mY, w + mX, h + mY);
+		Rect destR = new Rect(0, 0, w, h);
+		canvas.drawBitmap(mBitmap, srcR, destR, paint);
+
+		// Draw text
+		paint = new Paint(); 
 		paint.setColor(Color.WHITE);
 		paint.setTextSize(30);
 		canvas.drawText("Emo", 20, 60, paint);
-
-		canvas.clipRect(0, 0, 100, 100);
 
 		canvas.restore();
 	}
@@ -59,4 +59,15 @@ public class MySurafaceView extends SurfaceView {
     	String message = String.format(format, args);
     	Log.d("test", message);
     }
+
+    
+    int mX = 0;
+    int mY = 0;
+	public void setXY(int x, int y) {
+		// TODO Auto-generated method stub
+		mX = x;
+		mY = y;
+		this.invalidate();
+		
+	}
 }

@@ -114,8 +114,24 @@ public class MainActivity extends Activity {
 				refreshTask = RefrestTask.start(handler, img, bitmapDrawables);
 			}
 		});
+
+        Drawable drawable = getResources().getDrawable(R.drawable.sprite);
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+
+        final MySurafaceView surfaceView = (MySurafaceView) findViewById(R.id.surface);
+        surfaceView.setWillNotDraw(false);
+        surfaceView.setBitmap(bitmap);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	surfaceView.setXY(x, y += 10);
+            }
+        });
     }
 
+    int x = 0;
+    int y = 0;
+    
     static void printf(String format, Object...args) {
     	String message = String.format(format, args);
     	Log.d("test", message);
