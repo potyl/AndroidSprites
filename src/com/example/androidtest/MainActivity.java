@@ -83,7 +83,9 @@ public class MainActivity extends Activity {
 
 				ImageView img = (ImageView) findViewById(R.id.imageView1);
 
-		        // Create the bitmaps
+		        // Create the a lot of bitmaps; 1 per vertical pixel in the image (1300 bitmaps)
+				// This is done to test that we don't require too much memory for this implementation
+				// The main bitmap is shared among all drawables so all we need is a few pointers per drawable
 				Resources res = getResources();
 				Drawable drawable = res.getDrawable(R.drawable.sprite);
 				Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
