@@ -78,8 +78,10 @@ public class MainActivity extends Activity {
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				// End the previous animation (this frees the previous drawables)
+				if (refreshTask != null) handler.removeCallbacks(refreshTask);
 
-		        ImageView img = (ImageView) findViewById(R.id.imageView1);
+				ImageView img = (ImageView) findViewById(R.id.imageView1);
 
 		        // Create the bitmaps
 				Resources res = getResources();
@@ -96,7 +98,7 @@ public class MainActivity extends Activity {
 				printf("img: %s x %s", w, h);
 
 				long memA = getMemoryUsed();
-				final Drawable [] bitmapDrawables = new Drawable [ (height - h) ];
+				Drawable [] bitmapDrawables = new Drawable [ (height - h) ];
 				printf("Creating: %s bitmaps", bitmapDrawables.length);
 				int y = 0;
 				for (int i = 0; i < bitmapDrawables.length; ++i) {
@@ -108,38 +110,11 @@ public class MainActivity extends Activity {
 
 
 				// Start the animation
-				if (refreshTask != null) handler.removeCallbacks(refreshTask);
 				refreshTask = RefrestTask.start(handler, img, bitmapDrawables);
 			}
 		});
-
-//        Drawable drawable = getResources().getDrawable(R.drawable.sprite);
-//        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-//
-//        final MySurafaceView surfaceView = (MySurafaceView) findViewById(R.id.surface);
-//        surfaceView.setWillNotDraw(false);
-//        surfaceView.setBitmap(bitmap);
-//
-//        if (false) button.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//				Resources res = getResources();
-//				Drawable drawable = res.getDrawable(R.drawable.sprite);
-//				Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-//
-//		        ImageView img = (ImageView) findViewById(R.id.imageView1);
-//				int w = img.getWidth();
-//				int h = img.getHeight();
-//                MyDrawable myDrawable = new MyDrawable(bitmap, 0, 0, w, h);
-//                img.setImageDrawable(myDrawable);
-//
-//            	surfaceView.setXY(x, y += 10);
-//            }
-//        });
     }
-//
-//    int x = 0;
-//    int y = 0;
-    
+
     static void printf(String format, Object...args) {
     	String message = String.format(format, args);
     	Log.d("test", message);
