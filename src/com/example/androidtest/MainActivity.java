@@ -26,27 +26,27 @@ public class MainActivity extends Activity {
 
 		private final Handler handler;
 		private final ImageView img;
-		private final BitmapDrawable [] bitmapDrawables;
+		private final Drawable [] bitmapDrawables;
 
 		int idx = 0;
 		int speed = 5; // speed in pixels
 		boolean goRight = true; // Direction
 
 		
-		static RefrestTask start(Handler handler, ImageView img, BitmapDrawable [] bitmapDrawables) {
+		static RefrestTask start(Handler handler, ImageView img, Drawable [] bitmapDrawables) {
 			RefrestTask task = new RefrestTask(handler, img, bitmapDrawables);
 			handler.postDelayed(task, 0); 
 			return task;
 		}
 		
-		public RefrestTask(Handler handler, ImageView img, BitmapDrawable [] bitmapDrawables) {
+		public RefrestTask(Handler handler, ImageView img, Drawable [] bitmapDrawables) {
 			this.img = img;
 			this.handler = handler;
 			this.bitmapDrawables = bitmapDrawables;
 		}
 		
 		public void run() {
-			BitmapDrawable d = bitmapDrawables[idx];
+			Drawable d = bitmapDrawables[idx];
 			img.setImageDrawable(d);
 			
 			if (goRight) {
@@ -96,13 +96,11 @@ public class MainActivity extends Activity {
 				printf("img: %s x %s", w, h);
 
 				long memA = getMemoryUsed();
-				final BitmapDrawable [] bitmapDrawables = new BitmapDrawable [300];//[ (height - h) ];
+				final Drawable [] bitmapDrawables = new Drawable [ (height - h) ];
 				printf("Creating: %s bitmaps", bitmapDrawables.length);
 				int y = 0;
 				for (int i = 0; i < bitmapDrawables.length; ++i) {
-					Bitmap bClipped = Bitmap.createBitmap(bitmap, 50, y, w, h);
-					BitmapDrawable bDrawable = new BitmapDrawable(res, bClipped);
-					bitmapDrawables[i] = bDrawable;
+					bitmapDrawables[i] = new MyDrawable(bitmap, 50, y, w, h);
 					++y;
 				}
 				long memB = getMemoryUsed();
@@ -115,22 +113,32 @@ public class MainActivity extends Activity {
 			}
 		});
 
-        Drawable drawable = getResources().getDrawable(R.drawable.sprite);
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-
-        final MySurafaceView surfaceView = (MySurafaceView) findViewById(R.id.surface);
-        surfaceView.setWillNotDraw(false);
-        surfaceView.setBitmap(bitmap);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	surfaceView.setXY(x, y += 10);
-            }
-        });
+//        Drawable drawable = getResources().getDrawable(R.drawable.sprite);
+//        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+//
+//        final MySurafaceView surfaceView = (MySurafaceView) findViewById(R.id.surface);
+//        surfaceView.setWillNotDraw(false);
+//        surfaceView.setBitmap(bitmap);
+//
+//        if (false) button.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//				Resources res = getResources();
+//				Drawable drawable = res.getDrawable(R.drawable.sprite);
+//				Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+//
+//		        ImageView img = (ImageView) findViewById(R.id.imageView1);
+//				int w = img.getWidth();
+//				int h = img.getHeight();
+//                MyDrawable myDrawable = new MyDrawable(bitmap, 0, 0, w, h);
+//                img.setImageDrawable(myDrawable);
+//
+//            	surfaceView.setXY(x, y += 10);
+//            }
+//        });
     }
-
-    int x = 0;
-    int y = 0;
+//
+//    int x = 0;
+//    int y = 0;
     
     static void printf(String format, Object...args) {
     	String message = String.format(format, args);
