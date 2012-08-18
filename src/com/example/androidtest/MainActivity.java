@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,18 +16,67 @@ import android.widget.ImageView;
 
 public class MainActivity extends Activity {
 
-	BitmapDrawable [] bitmapDrawables;
+	private RefrestTask refreshTask = null;
+	private Handler handler = new Handler();
+
+
+
+	static class RefrestTask implements Runnable {
+		private static final long REFRESH_INTERVAL = 1000/30; // 30 frames per second
+
+		private final Handler handler;
+		private final ImageView img;
+		private final BitmapDrawable [] bitmapDrawables;
+
+		int idx = 0;
+		int speed = 10; // speed in pixels
+		boolean goRight = true; // Direction
+
+		
+		static RefrestTask start(Handler handler, ImageView img, BitmapDrawable [] bitmapDrawables) {
+			RefrestTask task = new RefrestTask(handler, img, bitmapDrawables);
+			handler.postDelayed(task, 0); 
+			return task;
+		}
+		
+		public RefrestTask(Handler handler, ImageView img, BitmapDrawable [] bitmapDrawables) {
+			this.img = img;
+			this.handler = handler;
+			this.bitmapDrawables = bitmapDrawables;
+		}
+		
+		public void run() {
+			BitmapDrawable d = bitmapDrawables[idx];
+			img.setImageDrawable(d);
+			
+			if (goRight) {
+				idx += speed;
+				if (idx >= bitmapDrawables.length) {
+					idx = bitmapDrawables.length - 1;
+					goRight = false;
+				}
+			}
+			else {
+				idx -= speed;
+				if (idx < 0) {
+					idx = 0;
+					goRight = true;
+				}
+			}
+
+			// Schedule the next refresh
+			handler.postDelayed(this, REFRESH_INTERVAL);
+		}
+	}
 	
-	int idx = 0;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button button = (Button) findViewById(R.id.button);
-
         final ImageView img = (ImageView) findViewById(R.id.imageView1);
 
+        // Create the bitmaps
 		Resources res = getResources();
 		Drawable drawable = res.getDrawable(R.drawable.budapest);
 		Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
@@ -40,8 +90,8 @@ public class MainActivity extends Activity {
 		printf("bitmap: %s x %s", width, height);
 		printf("img: %s x %s", w, h);
 
-		printf("1) %s", getMemoryUsed());
-		bitmapDrawables = new BitmapDrawable [ 500 ];
+		long memA = getMemoryUsed();
+		final BitmapDrawable [] bitmapDrawables = new BitmapDrawable [width - w];
 		printf("Creating: %s bitmaps", bitmapDrawables.length);
 		int x = 0;
 		int y = 0;
@@ -56,15 +106,15 @@ public class MainActivity extends Activity {
 			bitmapDrawables[i] = bDrawable;
 			++x;
 		}
-		printf("2) %s", getMemoryUsed());
+		long memB = getMemoryUsed();
+		printf("Memory increase: %s", memB - memA);
 
-        if (button != null) button.setOnClickListener(new View.OnClickListener() {
-			
+
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (idx++ == bitmapDrawables.length) idx = 0;
-				BitmapDrawable d = bitmapDrawables[idx];
-				printf("Using bitmapt: %s; bouns: %s", idx, d.getBounds());
-				img.setImageDrawable(d);
+				if (refreshTask != null) handler.removeCallbacks(refreshTask);
+				refreshTask = RefrestTask.start(handler, img, bitmapDrawables);
 			}
 		});
     }
