@@ -1,7 +1,11 @@
 package com.example.androidtest;
 
 import android.app.Activity;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -19,8 +23,22 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button button = (Button) findViewById(R.id.button);
-        
+
         final ImageView img = (ImageView) findViewById(R.id.imageView1);
+
+        if (button != null) button.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				printf("Using a bitmap");
+				Resources res = getResources();
+				Drawable drawable = res.getDrawable(R.drawable.budapest);
+				Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+				Bitmap clippedBitmap = Bitmap.createBitmap(bitmap, 0, 0, 100, 100);
+				BitmapDrawable bitmapDrawable = new BitmapDrawable(res, clippedBitmap);
+				img.setImageDrawable(bitmapDrawable);
+			}
+		});
+
 
         if (button == null) button.setOnClickListener(new View.OnClickListener() {
 			
@@ -56,23 +74,23 @@ public class MainActivity extends Activity {
 			}
 		});
 
-        MySurafaceView surfaceView = (MySurafaceView) findViewById(R.id.surface);
-		Drawable drawable = getResources().getDrawable(R.drawable.budapest);
-        surfaceView.setWillNotDraw(false);
-        surfaceView.setDrawable(drawable);
-//        surfaceView.refreshDrawableState();
-//        surfaceView.invalidateDrawable(drawable);
-//        surfaceView.invalidate();
-
-        if (button != null) button.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Drawable drawable = getResources().getDrawable(R.drawable.budapest);
-
-				printf("Use existin surface");
-		        MySurafaceView surfaceView = (MySurafaceView) findViewById(R.id.surface);
-		        surfaceView.setDrawable(drawable);
-			}
-		});
+//        MySurafaceView surfaceView = (MySurafaceView) findViewById(R.id.surface);
+//		Drawable drawable = getResources().getDrawable(R.drawable.budapest);
+//        surfaceView.setWillNotDraw(false);
+//        surfaceView.setDrawable(drawable);
+////        surfaceView.refreshDrawableState();
+////        surfaceView.invalidateDrawable(drawable);
+////        surfaceView.invalidate();
+//
+//        if (button != null) button.setOnClickListener(new View.OnClickListener() {
+//			public void onClick(View v) {
+//				Drawable drawable = getResources().getDrawable(R.drawable.budapest);
+//
+//				printf("Use existin surface");
+//		        MySurafaceView surfaceView = (MySurafaceView) findViewById(R.id.surface);
+//		        surfaceView.setDrawable(drawable);
+//			}
+//		});
 
     }
 
