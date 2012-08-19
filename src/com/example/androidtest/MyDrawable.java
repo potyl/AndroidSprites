@@ -3,44 +3,47 @@ package com.example.androidtest;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 public class MyDrawable extends Drawable {
 
-	final Bitmap mBitmap;
-	final Rect srcR;
-	final Rect destR;
+	private final Bitmap bitmap;
+	private final Rect srcR;
+	private final Rect destR;
 
-	int alpha;
-	ColorFilter cf;
-	int opacity;
+	private final Paint paint = new Paint();
 
 	public MyDrawable(Bitmap bitmap, int x, int y, int w, int h) {
-		this.mBitmap = bitmap;
+		if (bitmap == null) {
+			throw new IllegalArgumentException("Bitmap can't be null");
+		}
+		this.bitmap = bitmap;
 		this.srcR  = new Rect(x, y, x + w, h + y);
 		this.destR = new Rect(0, 0, w, h);
-
-		this.alpha = 0;
-		this.cf = null;
-		this.opacity = 0;
 	}
 	
 	@Override
 	public void draw(Canvas canvas) {
 		canvas.save();
-		canvas.drawBitmap(mBitmap, srcR, destR, null);
+		canvas.drawBitmap(this.bitmap, this.srcR, this.destR, this.paint);
 		canvas.restore();
 	}
 
 	@Override
 	public void setAlpha(int alpha) {
-		this.alpha = alpha;
+		int oldAlpha  = this.paint.getAlpha();
+		if (oldAlpha == alpha) return;
+		this.paint.setAlpha(alpha);
+		invalidateSelf();
 	}
 
 	@Override
 	public void setColorFilter(ColorFilter cf) {
-		this.cf = cf;
+		this.paint.setColorFilter(cf);
+		invalidateSelf();
 	}
 
 	@Override
