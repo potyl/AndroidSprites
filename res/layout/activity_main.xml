@@ -15,7 +15,8 @@
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="360px"
-        android:layout_height="100px"
+        android:layout_height="50px"
+        android:layout_gravity="center_horizontal"
         android:visibility="visible" />
 
     <!-- <com.example.androidtest.MySurafaceView
