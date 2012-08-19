@@ -104,7 +104,8 @@ public class MainActivity extends Activity {
 				printf("Creating: %s bitmaps", drawables.length);
 				int y = 0;
 				for (int i = 0; i < drawables.length; ++i) {
-					drawables[i] = new MyDrawable(bitmap, 50, y, w, h);
+					Drawable d = new MyDrawable(bitmap, 0, y, w, h);
+					drawables[i] = d;
 					++y;
 				}
 				long memB = getMemoryUsed();

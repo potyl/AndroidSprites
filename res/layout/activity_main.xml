@@ -16,6 +16,7 @@
         android:id="@+id/imageView1"
         android:layout_width="360px"
         android:layout_height="50px"
+        android:alpha="127"
         android:layout_gravity="center_horizontal"
         android:visibility="visible" />
 
