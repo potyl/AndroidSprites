@@ -14,8 +14,8 @@
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="140dp"
-        android:layout_height="100dp"
+        android:layout_width="360px"
+        android:layout_height="100px"
         android:visibility="visible" />
 
     <!-- <com.example.androidtest.MySurafaceView
