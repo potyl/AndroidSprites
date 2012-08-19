@@ -48,6 +48,9 @@ public class MyDrawable extends Drawable {
 
 	@Override
 	public int getOpacity() {
-		return this.getOpacity();
+		return this.bitmap.hasAlpha() || this.paint.getAlpha() < 255
+			? PixelFormat.TRANSLUCENT
+			: PixelFormat.OPAQUE
+		;
 	}
 }
