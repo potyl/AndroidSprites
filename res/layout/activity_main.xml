@@ -19,10 +19,4 @@
         android:alpha="127"
         android:layout_gravity="center_horizontal"
         android:visibility="visible" />
-
-    <!-- <com.example.androidtest.MySurafaceView
-        android:id="@+id/surface"
-        android:layout_width="140dp"
-        android:layout_height="100dp"
-    /> -->
 </LinearLayout>
