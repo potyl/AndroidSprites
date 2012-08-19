@@ -64,7 +64,6 @@ public class MySurafaceView extends SurfaceView {
     int mX = 0;
     int mY = 0;
 	public void setXY(int x, int y) {
-		// TODO Auto-generated method stub
 		mX = x;
 		mY = y;
 		this.invalidate();
