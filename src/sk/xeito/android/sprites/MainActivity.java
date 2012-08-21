@@ -1,4 +1,6 @@
-package com.example.androidtest;
+package sk.xeito.android.sprites;
+
+import sk.xeito.android.sprites.R;
 
 import android.app.Activity;
 import android.app.ActivityManager;

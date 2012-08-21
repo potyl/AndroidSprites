@@ -1,4 +1,4 @@
-package com.example.androidtest;
+package sk.xeito.android.sprites;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
