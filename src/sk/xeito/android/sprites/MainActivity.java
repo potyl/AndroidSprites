@@ -1,26 +1,30 @@
 package sk.xeito.android.sprites;
 
-import sk.xeito.android.sprites.R;
-
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
+import android.app.Dialog;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
 	private RefrestTask refreshTask = null;
 	private Handler handler = new Handler();
-
 
 
 	static class RefrestTask implements Runnable {
@@ -77,6 +81,59 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        createSprites();
+        
+        prepareDialog();
+    }
+
+    static void printf(String format, Object...args) {
+    	String message = String.format(format, args);
+    	Log.d("test", message);
+    }
+
+    long getMemoryUsed() {
+    	ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+    	MemoryInfo mi = new MemoryInfo();
+    	activityManager.getMemoryInfo(mi);
+    	return mi.availMem;
+    }
+    
+    private void prepareDialog() {
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				createDialog();
+				Toast.makeText(MainActivity.this, "clicked", Toast.LENGTH_LONG).show();
+			}
+        });
+    }
+    
+    
+    private Dialog dialog;
+    private void createDialog() {
+
+        if (dialog != null) dialog.dismiss();
+        dialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar);
+        Window window = dialog.getWindow();
+        int flags = LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
+        window.setFlags(flags, flags);
+
+        TextView view = new TextView(this);
+        view.setTextColor(Color.argb(200, 255, 0, 0));
+        view.setText("Hi!!!");
+        view.setTextSize(128);
+        view.setBackgroundColor(Color.argb(200, 50, 50, 50));
+        dialog.setContentView(view);
+        dialog.show();
+    }
+
+    private String getMemoryUsedStr() {
+    	  int usedMegs = (int) (Debug.getNativeHeapAllocatedSize() / 1048576L);
+    	  String usedMegsString = String.format(" - Memory Used: %d MB", usedMegs);
+    	  return usedMegsString;//getWindow().setTitle(usedMegsString);
+    }
+
+    private void createSprites() {
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -119,18 +176,4 @@ public class MainActivity extends Activity {
 			}
 		});
     }
-
-    static void printf(String format, Object...args) {
-    	String message = String.format(format, args);
-    	Log.d("test", message);
-    }
-
-    long getMemoryUsed() {
-    	ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-    	MemoryInfo mi = new MemoryInfo();
-    	activityManager.getMemoryInfo(mi);
-    	return mi.availMem;
-    }
 }
-
-
