@@ -19,4 +19,12 @@
         android:alpha="127"
         android:layout_gravity="center_horizontal"
         android:visibility="visible" />
+
+    <Button
+        android:id="@+id/toast_button"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="bottom|fill_vertical"
+        android:text="Toast!" />
+    
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.os.Debug;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
@@ -21,6 +23,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -106,15 +109,49 @@ public class MainActivity extends Activity {
 				createDialog();
 			}
         });
+        
+        
+        Button toastButton = (Button) findViewById(R.id.toast_button);
+        toastButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Toast.makeText(MainActivity.this, "Toasty !!!", Toast.LENGTH_SHORT).show();
+			}
+		});
     }
     
-    private Dialog dialog;
+    static class MyDialog extends Dialog {
+
+		public MyDialog(Context context, int theme) {
+			super(context, theme);
+		}
+		
+//		@Override
+//		public boolean dispatchGenericMotionEvent(MotionEvent ev) {
+//			printf("Touch event %s", ev);
+//			return super.dispatchGenericMotionEvent(ev);
+//		}
+		
+		@Override
+		public boolean dispatchTouchEvent(MotionEvent ev) {
+			Activity activity = getOwnerActivity();
+			
+			boolean consumed = super.dispatchTouchEvent(ev);
+			printf("Touch event %s; owner: %s; consumed: %s", ev, activity, consumed);
+
+			if (consumed) return true;
+			return activity.dispatchTouchEvent(ev);
+		}
+
+    }
+    
+    private MyDialog dialog;
     private void createDialog() {
     	
     	if (dialog != null) dialog.dismiss();
-        dialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar);
+        dialog = new MyDialog(this, android.R.style.Theme_Translucent_NoTitleBar);
+        dialog.setOwnerActivity(this);
         Window window = dialog.getWindow();
-        int flags = LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
+        int flags = LayoutParams.FLAG_NOT_FOCUSABLE;
         window.setFlags(flags, flags);
 
         // The main widget
@@ -122,6 +159,13 @@ public class MainActivity extends Activity {
         textView.setTextColor(Color.argb(100, 250, 0, 0));
         textView.setTextSize(72);
         textView.setText("Hi!!!");
+        textView.setClickable(true);
+        textView.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				Toast.makeText(MainActivity.this, "*** IT WORKS ***", Toast.LENGTH_SHORT).show();
+			}
+		});
 
         // Position the main widget with a frame layout
         FrameLayout layout = new FrameLayout(this);
